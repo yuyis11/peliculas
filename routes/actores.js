@@ -2,6 +2,7 @@ import { Router } from "express";
 import { actoresGet, actoresGetId, actoresPost } from "../controllers/actores.js";
 import { validarCampos } from "../middellware/persona.js";
 import { check } from "express-validator";
+import { validarJWT } from "../middellware/validar.js";
 
 
 
@@ -13,7 +14,7 @@ router.post('/',[
     check('biografia','el campo biografia debe swer mayot a 6').isLength({min:6}),
     validarCampos
 ],actoresPost)
-router.get('/get',actoresGet)
-router.delete('/id',actoresGetId)
+router.get('/get',validarJWT,actoresGet)
+router.delete('/id',validarJWT,actoresGetId)
 
 export default router

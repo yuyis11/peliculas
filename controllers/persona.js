@@ -1,6 +1,7 @@
 import Persona from "../models/persona.js";
 import bcryptjs from "bcryptjs";
 import { generarJWT } from "../middellware/validar.js";
+import subirArchivo from "../helpers/subir_archivo.js";
 
 
 const personaPost= async (req,res)=>{
@@ -74,10 +75,38 @@ const personaDesactiva=async (req,res)=>{
 
  const personaMostar=async (req, res) => {
     const persona= await Persona.find();
-    res.json({persona})
+    res.json({
+        persona})
     
 } 
+const cargarFoto=async(req,res)=>{
+    const{id}=req.params;
+    try{
+        let nombre
+        await subirArchivo(req.files,undefined)
+        .then(value=>nombre=value)
+        .catch((err)=>console.log(err));
+
+        //persona a la que pertenece la foto
+        let persona=await Persona.findById(id);
+        if(persona.foto){
+            const __dirname=path.dirname(url.fileURLToPath(import.meta.url));
+            const pathImage=path.join(__dirname,'../uploads',persona.foto);
+
+            if(fs.existsSync(pathImage)){
+                console.log('existe archivo');
+                fs.unlinkSycn(pathImage)
+            }
+        }
+        persona=await Persona.findByIdAndUpdate(id,{foto:nombre})
+        res.json({
+            nombre
+        })
+    }catch(error){
+
+    }
+}
 
 
-export{personaPost,personaLogin,personaDelete, personaPut,personaGetId,personaActivar,personaDesactiva,personaMostar }
+export{personaPost,personaLogin,personaDelete, personaPut,personaGetId,personaActivar,personaDesactiva,personaMostar ,cargarFoto}
 

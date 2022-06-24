@@ -2,6 +2,7 @@ import { Router } from "express";
 import {comentarioPost,  cometarioGet } from "../controllers/comentario.js";
 import { validarCampos } from "../middellware/persona.js";
 import { check } from "express-validator";
+import { validarJWT } from "../middellware/validar.js";
 const router=new Router()
 
 router.post('/',[
@@ -14,7 +15,7 @@ router.post('/',[
 
 
 ],comentarioPost)
-router.get('/get',cometarioGet)
+router.get('/get',validarJWT,cometarioGet)
 
 
 
